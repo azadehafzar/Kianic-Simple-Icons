@@ -18,9 +18,10 @@ process =subprocess.run(["./downloader.sh"], stdout=subprocess.PIPE)
 # list name of all the icon svg files.
 file_names = [os.path.splitext(file)[0] for file in os.listdir(icon_path) if file.lower().endswith(".svg")]
 
+# sort file names alphabetically.
+file_names = sorted(file_names, key=str.lower) 
 
 # scss file template.
-
 scss_file_template = """// This an auto generated file, do not modify!
 @if variable-exists(include) {{
   @each $brand in $include {{
