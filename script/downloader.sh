@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-CURRDIR="$(echo $PWD)"
-ICONDIR="$(echo ${PWD%/*})/kiasimcons/icons"
+CURRDIR="$PWD"
+ICONDIR="${PWD%/*}/kiasimcons/icons"
 TEMPDIR="temp"
 TEMPICON="$( echo "$TEMPDIR/"*"/icons" )"
 
