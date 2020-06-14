@@ -9,8 +9,8 @@ LOCATION=$(curl -s https://api.github.com/repos/simple-icons/simple-icons/releas
 | grep "tag_name" \
 | awk '{print "https://github.com/simple-icons/simple-icons/archive/" substr($2, 2, length($2)-3) ".tar.gz"}') \
 
-mkdir -p $TEMPDIR && curl -L $LOCATION | tar -xzv --directory $TEMPDIR
+mkdir -p $TEMPDIR && curl -L $LOCATION | tar -xz --directory $TEMPDIR
 
 rm -rf "$ICONDIR" && mkdir -p "$ICONDIR"
 
-mv -v  $TEMPICON/* "$ICONDIR/" && rm -rf $TEMPDIR
+mv $TEMPICON/* "$ICONDIR/" && rm -rf $TEMPDIR
