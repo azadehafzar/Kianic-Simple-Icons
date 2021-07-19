@@ -44,4 +44,3 @@ new_scss_file = scss_file_template.format(new_icon_list_compiled)
 # write new scss file to disk.
 with open(scss_file_path, "w+") as file:
     file.write(new_scss_file)
-
