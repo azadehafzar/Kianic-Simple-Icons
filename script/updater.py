@@ -2,7 +2,6 @@
 
 # Python Standard Library
 import os
-import glob
 import subprocess
 
 # configure path variables.
@@ -25,15 +24,15 @@ file_names = sorted(file_names, key=str.lower)
 # scss file template.
 scss_file_template = """// This an auto generated file, do not modify!
 @if variable-exists(include) {{
-  @each $brand in $include {{
-    @include kiasimcons($brand);
-  }}
+    @each $brand in $include {{
+        @include kiasimcons($brand);
+    }}
 }} @else {{
 {0}
 }}
 """
 
-icon_include_template = "  @include kiasimcons({0});"
+icon_include_template = "    @include kiasimcons({0});"
 
 # generate new icon list.
 new_icon_list = [icon_include_template.format(file_name) for file_name in file_names]
