@@ -1,34 +1,40 @@
 #!/usr/bin/env bash
 
-CURRDIR="$PWD"
-ICONDIR="${PWD%/*}/kiasimcons/icons"
-ICON_TARGZ="kiasimcons.tar.gz"
+CURRDIR="${PWD}"
+ICONDIR="${PWD%/*}/kiasimcons"
 TEMPDIR="temp"
-TEMPICON="$( echo "$TEMPDIR/"*"/icons" )"
 
 # Create temporary directory.
-mkdir -p $TEMPDIR 
-
-# Reset current icon directories.
-rm -rf "$ICONDIR"
-mkdir -p "$ICONDIR"
+mkdir --parents "${TEMPDIR}"
 
 # Create download link.
-LOCATION=$(curl -s https://api.github.com/repos/simple-icons/simple-icons/releases/latest \
+SIC_VERSION=$(curl --silent https://api.github.com/repos/simple-icons/simple-icons/releases/latest \
 | grep "tag_name" \
-| awk '{print "https://github.com/simple-icons/simple-icons/archive/" substr($2, 2, length($2)-3) ".tar.gz"}') \
+| awk '{print "" substr($2, 2, length($2)-3)}')
+
+SIC_DOWNLOAD_LINK="https://github.com/simple-icons/simple-icons/archive/${SIC_VERSION}.tar.gz"
+
+# Setup paths.
+SIC_TARGZ="kiasimcons.tar.gz"
+TEMPICON="./${TEMPDIR}/simple-icons-${SIC_VERSION}/icons"
 
 # Download.
-curl -L "$LOCATION" > "$ICON_TARGZ"
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 \
+--tries 0 --no-dns-cache --output-document "${SIC_TARGZ}" "${SIC_DOWNLOAD_LINK}"
 
-# Extract
-tar -xz --file "$ICON_TARGZ" --directory "./$TEMPDIR"
+tar --extract --gzip --file "${SIC_TARGZ}" --directory "./${TEMPDIR}"
 
 # Delete downloaded tar.gz
-rm "$ICON_TARGZ"
+rm "${SIC_TARGZ}"
+
+# Remove current icons.
+rm --force --recursive "${ICONDIR}/icons"
 
 # Move files from temporary directory to main directory.
-mv $TEMPICON/* "$ICONDIR/"
+mv "${TEMPICON}" "${ICONDIR}"
 
 # Delete temporary folder.
-rm -rf $TEMPDIR
+rm --force --recursive "${TEMPDIR}"
+
+# restore deleted icons
+git ls-files -z -d | xargs -0 git checkout --
